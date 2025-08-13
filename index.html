@@ -1,0 +1,772 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atomo Blog Publisher</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+        textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .success-message {
+            display: none;
+            background-color: #2ecc71;
+            color: white;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Atomo Blog Publisher</h1>
+        
+        <form id="blogForm">
+            <div class="form-group">
+                <label for="title">Title*</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="category">Category*</label>
+                <select id="category" name="category" required>
+                    <option value="">Select a category</option>
+                    <option value="Innovation">Innovation</option>
+                    <option value="Explained Simply">Explained Simply</option>
+                    <option value="Market Trends & Insights">Market Trends & Insights</option>
+                    <option value="Cultural Values">Cultural Values</option>
+                    <option value="Tech Vault">Tech Vault</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="subtitle">Subtitle</label>
+                <input type="text" id="subtitle" name="subtitle">
+            </div>
+            
+            <div class="form-group">
+                <label for="content">Content*</label>
+                <textarea id="content" name="content" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="author">Author Name*</label>
+                <input type="text" id="author" name="author" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="position">Author Position*</label>
+                <input type="text" id="position" name="position" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="date">Publish Date</label>
+                <input type="date" id="date" name="date">
+            </div>
+            
+            <div class="form-group">
+                <label for="image">Author Image</label>
+                <input type="file" id="image" name="image" accept="image/*">
+            </div>
+            
+            <div class="form-group">
+                <label for="slug">URL Slug</label>
+                <input type="text" id="slug" name="slug" placeholder="auto-generated-if-empty">
+            </div>
+            
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="featured" name="featured">
+                <label for="featured">Featured Post</label>
+            </div>
+            
+            <button type="submit">Publish Blog</button>
+        </form>
+        
+        <div id="successMessage" class="success-message">
+            Blog published successfully! It will now appear on the main website.
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('blogForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            const formElements = e.target.elements;
+            
+            // Add all form data except the file
+            for (let element of e.target.elements) {
+                if (element.name && element.type !== 'file') {
+                    formData.append(element.name, element.value);
+                }
+            }
+            
+            // Add the file if selected
+            if (formElements.image.files[0]) {
+                formData.append('image', formElements.image.files[0]);
+            }
+            
+            try {
+                const response = await fetch('/api/blogs', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('blogForm').reset();
+                    
+                    // Hide success message after 5 seconds
+                    setTimeout(() => {
+                        document.getElementById('successMessage').style.display = 'none';
+                    }, 5000);
+                } else {
+                    alert('Error publishing blog');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to publish blog');
+            }
+        });
+        
+        // Auto-generate slug from title
+        document.getElementById('title').addEventListener('input', function() {
+            const slugInput = document.getElementById('slug');
+            if (!slugInput.value) {
+                slugInput.value = this.value.toLowerCase()
+                    .replace(/\s+/g, '-')
+                    .replace(/[^\w-]+/g, '');
+            }
+        });
+    </script>
+</body>
+</html> jul3o -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atomo Blog Publisher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            
+            /* Dark theme colors */
+            --dark-bg: #121212;
+            --dark-surface: #1e1e1e;
+            --dark-surface-light: #2a2a2a;
+            --dark-text: #e0e0e0;
+            --dark-text-secondary: #a0a0a0;
+            --dark-border: #333333;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html, body {
+            height: 100%;
+            overflow: hidden; /* This removes all scroll bars */
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+        }
+        
+        .admin-header h1 {
+            font-weight: 600;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .admin-header h1 svg {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .publisher-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding: 1rem;
+        }
+        
+        .publisher-card {
+            background: var(--dark-surface);
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--dark-border);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background: linear-gradient(259deg, #000000 0%, #98915c 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .card-header h2 {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        .card-body {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+        }
+        
+        .card-body::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for Chrome/Safari */
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: var(--dark-text);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.65rem 0.9rem;
+            font-size: 0.95rem;
+            border: 1px solid var(--dark-border);
+            border-radius: 6px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-surface-light);
+            color: var(--dark-text);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
+        }
+        
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+            accent-color: var(--primary);
+        }
+        
+        .checkbox-group label {
+            color: var(--dark-text);
+            font-weight: 400;
+            font-size: 0.9rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.7rem 1.25rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background-color: #434028;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-upload-btn {
+            border: 2px dashed var(--dark-border);
+            border-radius: 6px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            background-color: var(--dark-surface-light);
+            color: var(--dark-text);
+        }
+        
+        .file-upload-btn:hover {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .file-upload-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-upload-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--dark-text);
+            font-size: 0.9rem;
+        }
+        
+        .file-preview {
+            margin-top: 0.75rem;
+            display: none;
+        }
+        
+        .file-preview img {
+            max-width: 120px;
+            max-height: 120px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid var(--dark-border);
+        }
+        
+        .file-preview p {
+            margin-top: 0.5rem;
+            color: var(--dark-text-secondary);
+            font-size: 0.8rem;
+        }
+        
+        /* Floating notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            max-width: 300px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .alert {
+            padding: 0.9rem;
+            border-radius: 8px;
+            font-weight: 500;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            border-left: 4px solid transparent;
+            background-color: var(--dark-surface-light);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .alert-success {
+            border-left-color: #10b981;
+        }
+        
+        .alert-success svg {
+            color: #10b981;
+            flex-shrink: 0;
+        }
+        
+        .alert-content {
+            flex: 1;
+        }
+        
+        .alert-content strong {
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        
+        .alert-content p {
+            font-weight: 400;
+            font-size: 0.85rem;
+            margin: 0;
+            color: var(--dark-text-secondary);
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-header {
+                padding: 0.8rem 1rem;
+            }
+            
+            .admin-header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .card-header h2 {
+                font-size: 1.1rem;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .notification {
+                max-width: calc(100% - 40px);
+            }
+        }
+    </style>
+</head>
+<body>
+   
+    <main class="publisher-container">
+        <div id="successMessage" class="alert alert-success" style="display: none;">
+            Blog published successfully! It will now appear on the main website.
+        </div>
+        
+        <div class="publisher-card">
+            <div class="card-header">
+                <h2>Create New Blog Post</h2>
+            </div>
+            <div class="card-body">
+                <form id="blogForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="title">Title*</label>
+                            <input type="text" id="title" name="title" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="category">Category*</label>
+                            <select id="category" name="category" class="form-control" required>
+                                <option value="">Select a category</option>
+                                <option value="Innovation">Innovation</option>
+                                <option value="Explained Simply">Explained Simply</option>
+                                <option value="Market Trends & Insights">Market Trends & Insights</option>
+                                <option value="Cultural Values">Cultural Values</option>
+                                <option value="Tech Vault">Tech Vault</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subtitle">Subtitle</label>
+                            <input type="text" id="subtitle" name="subtitle" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="slug">URL Slug</label>
+                            <input type="text" id="slug" name="slug" class="form-control" placeholder="auto-generated-if-empty">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="author">Author Name*</label>
+                            <input type="text" id="author" name="author" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="position">Author Position*</label>
+                            <input type="text" id="position" name="position" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="date">Publish Date</label>
+                            <input type="date" id="date" name="date" class="form-control">
+                        </div>
+                        
+                        <div class="form-group" style="
+    display: flex;
+    flex-direction: column-reverse;
+">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="featured" name="featured" class="form-control">
+                                <label for="featured">Featured Post</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="content">Content*</label>
+                        <textarea id="content" name="content" class="form-control" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="file-upload-label">Author Image</label>
+                        <div class="file-upload">
+                            <div class="file-upload-btn" id="fileUploadBtn">
+                                <p>Click to upload image or drag and drop</p>
+                                <p class="text-sm" style="color: var(--gray);">PNG, JPG up to 2MB</p>
+                            </div>
+                            <input type="file" id="image" name="image" class="file-upload-input" accept="image/*">
+                        </div>
+                        <div class="file-preview" id="filePreview"></div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
+                        Publish Blog
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const blogForm = document.getElementById('blogForm');
+            const successMessage = document.getElementById('successMessage');
+            const fileUploadBtn = document.getElementById('fileUploadBtn');
+            const filePreview = document.getElementById('filePreview');
+            const fileInput = document.querySelector('.file-upload-input');
+            
+            // Auto-generate slug from title
+            document.getElementById('title').addEventListener('input', function() {
+                const slugInput = document.getElementById('slug');
+                if (!slugInput.value) {
+                    slugInput.value = this.value.toLowerCase()
+                        .replace(/\s+/g, '-')
+                        .replace(/[^\w-]+/g, '');
+                }
+            });
+            
+            // File upload preview
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    const file = e.target.files[0];
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert('File size should be less than 2MB');
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        filePreview.innerHTML = `
+                            <img src="${event.target.result}" alt="Preview">
+                            <p>${file.name} (${(file.size / 1024).toFixed(1)} KB)</p>
+                        `;
+                        filePreview.style.display = 'block';
+                        fileUploadBtn.innerHTML = 'Change Image';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Form submission
+            blogForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const formData = new FormData();
+                const formElements = e.target.elements;
+                const submitBtn = blogForm.querySelector('button[type="submit"]');
+                
+                // Add all form data
+                for (let element of formElements) {
+                    if (element.name && element.type !== 'file' && element.type !== 'checkbox') {
+                        formData.append(element.name, element.value);
+                    } else if (element.type === 'checkbox') {
+                        formData.append(element.name, element.checked);
+                    }
+                }
+                
+                // Add the file if selected
+                if (fileInput.files[0]) {
+                    formData.append('image', fileInput.files[0]);
+                }
+                
+                try {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin">
+                            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+                        </svg>
+                        Publishing...
+                    `;
+                    
+                    const response = await fetch('/api/blogs', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (response.ok) {
+                        successMessage.style.display = 'block';
+                        successMessage.classList.add('animate-fade-in');
+                        blogForm.reset();
+                        filePreview.style.display = 'none';
+                        fileUploadBtn.innerHTML = 'Click to upload image or drag and drop<br><span style="color: var(--gray);">PNG, JPG up to 2MB</span>';
+                        
+                        // Hide success message after 5 seconds
+                        setTimeout(() => {
+                            successMessage.style.display = 'none';
+                            successMessage.classList.remove('animate-fade-in');
+                        }, 5000);
+                    } else {
+                        const error = await response.json();
+                        throw new Error(error.message || 'Error publishing blog');
+                    }
+                } catch (error) {
+                    alert(error.message || 'Failed to publish blog');
+                    console.error('Error:', error);
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
+                        Publish Blog
+                    `;
+                }
+            });
+            
+            // Drag and drop for file upload
+            fileUploadBtn.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileUploadBtn.style.borderColor = 'var(--primary)';
+                fileUploadBtn.style.backgroundColor = 'rgba(67, 97, 238, 0.1)';
+            });
+            
+            fileUploadBtn.addEventListener('dragleave', () => {
+                fileUploadBtn.style.borderColor = 'var(--light-gray)';
+                fileUploadBtn.style.backgroundColor = 'transparent';
+            });
+            
+            fileUploadBtn.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileUploadBtn.style.borderColor = 'var(--light-gray)';
+                fileUploadBtn.style.backgroundColor = 'transparent';
+                
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    const event = new Event('change');
+                    fileInput.dispatchEvent(event);
+                }
+            });
+        });
+
+        
+    </script>
+</body>
+</html>
