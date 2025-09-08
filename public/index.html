@@ -1,0 +1,2165 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atomo Blog Publisher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-light: #eef2ff;
+            --secondary: #6b7280;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --light-bg: #f9fafb;
+            --light-surface: #ffffff;
+            --light-surface-light: #f3f4f6;
+            --light-text: #111827;
+            --light-text-secondary: #6b7280;
+            --light-border: #e5e7eb;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html, body {
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+            color: var(--light-text);
+            line-height: 1.6;
+        }
+        
+        .password-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        
+        .password-container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .password-container h2 {
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--light-border);
+            border-radius: var(--radius-sm);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .password-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+        
+        .password-submit {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+        }
+        
+        .password-submit:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .password-error {
+            color: var(--error);
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+            display: none; 
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: var(--light-surface);
+            box-shadow: var(--shadow);
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--light-border);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+            padding: 0 1rem;
+        }
+        
+        .logo-icon {
+            background: var(--primary);
+            color: white;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--light-text);
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 1rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.5rem;
+            color: var(--light-text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .nav-item.active {
+            font-weight: 600;
+        }
+        
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            font-weight: 700;
+            font-size: 1.75rem;
+            color: var(--light-text);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .user-profile:hover {
+            background: var(--light-surface-light);
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: var(--light-surface);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--light-border);
+        }
+        
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .stat-icon.published {
+            background: #eef2ff;
+            color: var(--primary);
+        }
+        
+        .stat-icon.draft {
+            background: #fef3c7;
+            color: var(--warning);
+        }
+        
+        .stat-content h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-content p {
+            color: var(--light-text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .publisher-card {
+            background: var(--light-surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--light-border);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--light-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .card-header h2 {
+            font-weight: 600;
+            font-size: 1.25rem;
+            color: var(--light-text);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .card-header h2 i {
+            color: var(--primary);
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: var(--light-text);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.85rem 1.25rem;
+            font-size: 0.95rem;
+            border: 1px solid var(--light-border);
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-surface);
+            color: var(--light-text);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+        
+        select.form-control {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1rem;
+        }
+        
+        .ql-container {
+            min-height: 300px;
+            border-bottom-left-radius: var(--radius-sm);
+            border-bottom-right-radius: var(--radius-sm);
+            background-color: var(--light-surface);
+            color: var(--light-text);
+            border: 1px solid var(--light-border);
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .ql-toolbar {
+            background-color: var(--light-surface-light);
+            border: 1px solid var(--light-border);
+            border-bottom: none;
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 2.25rem;
+        }
+        
+        .checkbox-group input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+        
+        .checkbox-group label {
+            color: var(--light-text);
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+        
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+        
+        .file-upload-btn {
+            border: 2px dashed var(--light-border);
+            border-radius: var(--radius-sm);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            background-color: var(--light-surface-light);
+            color: var(--light-text);
+        }
+        
+        .file-upload-btn:hover {
+            border-color: var(--primary);
+            background-color: rgba(79, 70, 229, 0.05);
+        }
+        
+        .file-upload-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-upload-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            color: var(--light-text);
+            font-size: 0.95rem;
+        }
+        
+        .file-preview {
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .file-preview img {
+            max-width: 120px;
+            max-height: 120px;
+            border-radius: var(--radius-sm);
+            object-fit: cover;
+            border: 1px solid var(--light-border);
+            box-shadow: var(--shadow);
+        }
+        
+        .file-preview p {
+            margin-top: 0.5rem;
+            color: var(--light-text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.85rem 1.75rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.12);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.15);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+            margin-top: 1.5rem;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            max-width: 380px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-left: 4px solid transparent;
+            background-color: var(--light-surface);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--light-border);
+        }
+        
+        .alert-success {
+            border-left-color: var(--success);
+        }
+        
+        .alert-success i {
+            color: var(--success);
+            font-size: 1.25rem;
+        }
+        
+        .alert-content {
+            flex: 1;
+        }
+        
+        .alert-content strong {
+            display: block;
+            margin-bottom: 0.25rem;
+            color: var(--light-text);
+        }
+        
+        .alert-content p {
+            font-weight: 400;
+            font-size: 0.9rem;
+            margin: 0;
+            color: var(--light-text-secondary);
+        }
+        
+        .required-field::after {
+            content: "*";
+            color: var(--error);
+            margin-left: 3px;
+        }
+        
+        @media (max-width: 1024px) {
+            .admin-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 1rem;
+            }
+            
+            .nav-items {
+                display: flex;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+            
+            .nav-item {
+                margin-bottom: 0;
+                margin-right: 0.5rem;
+                white-space: nowrap;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1.5rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .password-container {
+                padding: 1.5rem;
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="password-modal" id="passwordModal">
+        <div class="password-container">
+            <h2><i class="fas fa-lock"></i> Admin Access Required</h2>
+            <input type="password" class="password-input" id="passwordInput" placeholder="Enter access password" autocomplete="off">
+            <button class="password-submit" id="passwordSubmit">Enter</button>
+            <div class="password-error" id="passwordError">Incorrect password. Please try again.</div>
+        </div>
+    </div>
+
+    <div class="admin-container" id="adminContainer">
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-pen-nib"></i>
+                </div>
+                <div class="logo-text">Atomo Publisher</div>
+            </div>
+            
+            <nav class="nav">
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>New Post</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Posts</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Team</span>
+                </a>
+            </nav>
+            
+            <div class="mt-auto">
+                <a href="#" class="nav-item" id="logoutLink">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <div class="header">
+                <h1>Create New Blog Post</h1>
+                <div class="user-profile">
+                    <div class="user-avatar">A</div>
+                    <div class="user-info">
+                        <div class="user-name">Atomo Innovation Pvt. Ltd.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="successMessage" class="notification">
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    <div class="alert-content">
+                        <strong>Success!</strong>
+                        <p>Blog published successfully! It will now appear on the main website.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="publisher-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-edit"></i> Blog Details</h2>
+                    <div class="actions">
+                        <button class="btn" style="background: var(--light-surface-light);">
+                            <i class="fas fa-save"></i> Save Draft
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <form id="blogForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="title" class="required-field">Title</label>
+                                <input type="text" id="title" name="title" class="form-control" required placeholder="Enter blog title">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="category" class="required-field">Category</label>
+                                <select id="category" name="category" class="form-control" required>
+                                    <option value="">Select a category</option>
+                                    <option value="Innovation">Innovation</option>
+                                    <option value="Explained Simply">Explained Simply</option>
+                                    <option value="Market Trends & Insights">Market Trends & Insights</option>
+                                    <option value="Cultural Values">Cultural Values</option>
+                                    <option value="Tech Vault">Tech Vault</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="subtitle">Subtitle</label>
+                                <input type="text" id="subtitle" name="subtitle" class="form-control" placeholder="Brief description of your blog">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="author" class="required-field">Author Name</label>
+                                <input type="text" id="author" name="author" class="form-control" required placeholder="Author's full name">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="position" class="required-field">Author Position</label>
+                                <input type="text" id="position" name="position" class="form-control" required placeholder="Author's position/role">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="date">Publish Date</label>
+                                <input type="date" id="date" name="date" class="form-control">
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="featured" name="featured" class="form-control">
+                                    <label for="featured">Feature this post on homepage</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="content" class="required-field">Content</label>
+                            <div id="content" class="form-control" style="min-height: 300px;"></div>
+                            <input type="hidden" id="content-hidden" name="content" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="file-upload-label">Author Image</label>
+                            <div class="file-upload">
+                                <div class="file-upload-btn" id="fileUploadBtn">
+                                    <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; margin-bottom: 0.75rem; color: var(--secondary);"></i>
+                                    <p>Click to upload or drag and drop</p>
+                                    <p style="color: var(--light-text-secondary); font-size: 0.85rem;">PNG, JPG up to 2MB</p>
+                                </div>
+                                <input type="file" id="image" name="image" class="file-upload-input" accept="image/*">
+                            </div>
+                            <div class="file-preview" id="filePreview"></div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-paper-plane"></i>
+                            Publish Blog Post
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordModal = document.getElementById('passwordModal');
+            const adminContainer = document.getElementById('adminContainer');
+            const passwordInput = document.getElementById('passwordInput');
+            const passwordSubmit = document.getElementById('passwordSubmit');
+            const passwordError = document.getElementById('passwordError');
+            
+            const correctPassword = "admin123"; 
+            
+            if (sessionStorage.getItem('authenticated') === 'true') {
+                passwordModal.style.display = 'none';
+                adminContainer.style.display = 'flex';
+            }
+            
+            passwordSubmit.addEventListener('click', function() {
+                if (passwordInput.value === correctPassword) {
+                    sessionStorage.setItem('authenticated', 'true');
+                    passwordModal.style.display = 'none';
+                    adminContainer.style.display = 'flex';
+                } else {
+                    passwordError.style.display = 'block';
+                    passwordInput.value = '';
+                    setTimeout(() => {
+                        passwordError.style.display = 'none';
+                    }, 3000);
+                }
+            });
+            
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    passwordSubmit.click();
+                }
+            });
+            
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                sessionStorage.removeItem('authenticated');
+                window.location.reload();
+            });
+            
+            const quill = new Quill('#content', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['blockquote', 'code-block'],
+                        [{ 'header': 1 }, { 'header': 2 }],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        [{ 'align': [] }], 
+                        ['link', 'image'],
+                        ['clean']
+                    ]
+                },
+                placeholder: 'Write your blog content here...',
+            });
+
+            const blogForm = document.getElementById('blogForm');
+            const successMessage = document.getElementById('successMessage');
+            const fileUploadBtn = document.getElementById('fileUploadBtn');
+            const filePreview = document.getElementById('filePreview');
+            const fileInput = document.querySelector('.file-upload-input');
+            const contentHidden = document.getElementById('content-hidden');
+            
+            document.getElementById('title').addEventListener('input', function() {
+                const slugInput = document.getElementById('slug');
+                if (!slugInput.value) {
+                    slugInput.value = this.value.toLowerCase()
+                        .replace(/\s+/g, '-')
+                        .replace(/[^\w-]+/g, '');
+                }
+            });
+            
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    const file = e.target.files[0];
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert('File size should be less than 2MB');
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        filePreview.innerHTML = `
+                            <img src="${event.target.result}" alt="Preview">
+                            <p>${file.name} (${(file.size / 1024).toFixed(1)} KB)</p>
+                        `;
+                        filePreview.style.display = 'block';
+                        fileUploadBtn.innerHTML = 'Change Image';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            blogForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const formData = new FormData();
+                const formElements = e.target.elements;
+                const submitBtn = blogForm.querySelector('button[type="submit"]');
+                
+                for (let element of formElements) {
+                    if (element.name && element.type !== 'file' && element.type !== 'checkbox') {
+                        if (element.name === 'content') {
+                            formData.append('content', quill.root.innerHTML);
+                        } else {
+                            formData.append(element.name, element.value);
+                        }
+                    } else if (element.type === 'checkbox') {
+                        formData.append(element.name, element.checked);
+                    }
+                }
+                
+                if (fileInput.files[0]) {
+                    formData.append('image', fileInput.files[0]);
+                }
+                
+                try {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = `
+                        <i class="fas fa-spinner fa-spin"></i>
+                        Publishing...
+                    `;
+                    
+                    const response = await fetch('/api/blogs', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (response.ok) {
+                        successMessage.classList.add('show');
+                        blogForm.reset();
+                        quill.setContents([]);
+                        filePreview.style.display = 'none';
+                        fileUploadBtn.innerHTML = `
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; margin-bottom: 0.75rem; color: var(--secondary);"></i>
+                            <p>Click to upload or drag and drop</p>
+                            <p style="color: var(--light-text-secondary); font-size: 0.85rem;">PNG, JPG up to 2MB</p>
+                        `;
+                        
+                        setTimeout(() => {
+                            successMessage.classList.remove('show');
+                        }, 5000);
+                    } else {
+                        const error = await response.json();
+                        throw new Error(error.message || 'Error publishing blog');
+                    }
+                } catch (error) {
+                    alert(error.message || 'Failed to publish blog');
+                    console.error('Error:', error);
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = `
+                        <i class="fas fa-paper-plane"></i>
+                        Publish Blog Post
+                    `;
+                }
+            });
+            
+            fileUploadBtn.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileUploadBtn.style.borderColor = 'var(--primary)';
+                fileUploadBtn.style.backgroundColor = 'rgba(79, 70, 229, 0.05)';
+            });
+            
+            fileUploadBtn.addEventListener('dragleave', () => {
+    fileUploadBtn.style.borderColor = 'var(--light-border)';
+    fileUploadBtn.style.backgroundColor = 'var(--light-surface-light)';
+});
+            
+            fileUploadBtn.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileUploadBtn.style.borderColor = 'var(--light-border)';
+                fileUploadBtn.style.backgroundColor = 'var(--light-surface-light)';
+                
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    const event = new Event('change');
+                    fileInput.dispatchEvent(event);
+                }
+            });
+        });
+    </script>
+</body>
+</html> main code sep3 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atomo Blog Publisher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-light: #eef2ff;
+            --secondary: #6b7280;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --light-bg: #f9fafb;
+            --light-surface: #ffffff;
+            --light-surface-light: #f3f4f6;
+            --light-text: #111827;
+            --light-text-secondary: #6b7280;
+            --light-border: #e5e7eb;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html, body {
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+            color: var(--light-text);
+            line-height: 1.6;
+            overflow-x: hidden; /* Prevent horizontal overflow on page */
+        }
+        
+        /* Password Modal Styles */
+        .password-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        
+        .password-container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .password-container h2 {
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--light-border);
+            border-radius: var(--radius-sm);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .password-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+        
+        .password-submit {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+        }
+        
+        .password-submit:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .password-error {
+            color: var(--error);
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+            display: none; /* Hidden until password is entered */
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--light-surface);
+            box-shadow: var(--shadow);
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--light-border);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+            padding: 0 1rem;
+        }
+        
+        .logo-icon {
+            background: var(--primary);
+            color: white;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--light-text);
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 1rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.5rem;
+            color: var(--light-text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .nav-item.active {
+            font-weight: 600;
+        }
+        
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            font-weight: 700;
+            font-size: 1.75rem;
+            color: var(--light-text);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .user-profile:hover {
+            background: var(--light-surface-light);
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: var(--light-surface);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--light-border);
+        }
+        
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .stat-icon.published {
+            background: #eef2ff;
+            color: var(--primary);
+        }
+        
+        .stat-icon.draft {
+            background: #fef3c7;
+            color: var(--warning);
+        }
+        
+        .stat-content h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-content p {
+            color: var(--light-text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* Publisher Card */
+        .publisher-card {
+            background: var(--light-surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--light-border);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--light-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .card-header h2 {
+            font-weight: 600;
+            font-size: 1.25rem;
+            color: var(--light-text);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .card-header h2 i {
+            color: var(--primary);
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        /* Form Elements */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: var(--light-text);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.85rem 1.25rem;
+            font-size: 0.95rem;
+            border: 1px solid var(--light-border);
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-surface);
+            color: var(--light-text);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+        
+        select.form-control {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1rem;
+        }
+        
+        .ql-container {
+            min-height: 300px;
+            border-bottom-left-radius: var(--radius-sm);
+            border-bottom-right-radius: var(--radius-sm);
+            background-color: var(--light-surface);
+            color: var(--light-text);
+            border: 1px solid var(--light-border);
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .ql-toolbar {
+            background-color: var(--light-surface-light);
+            border: 1px solid var(--light-border);
+            border-bottom: none;
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 2.25rem;
+        }
+        
+        .checkbox-group input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+        
+        .checkbox-group label {
+            color: var(--light-text);
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+        
+        /* File Upload */
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+        
+        .file-upload-btn {
+            border: 2px dashed var(--light-border);
+            border-radius: var(--radius-sm);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            background-color: var(--light-surface-light);
+            color: var(--light-text);
+        }
+        
+        .file-upload-btn:hover {
+            border-color: var(--primary);
+            background-color: rgba(79, 70, 229, 0.05);
+        }
+        
+        .file-upload-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-upload-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            color: var(--light-text);
+            font-size: 0.95rem;
+        }
+        
+        .file-preview {
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .file-preview img {
+            max-width: 120px;
+            max-height: 120px;
+            border-radius: var(--radius-sm);
+            object-fit: cover;
+            border: 1px solid var(--light-border);
+            box-shadow: var(--shadow);
+        }
+        
+        .file-preview p {
+            margin-top: 0.5rem;
+            color: var(--light-text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.85rem 1.75rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.12);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.15);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+            box-shadow: 0 4px 6px rgba(107, 114, 128, 0.12);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #4b5563;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(107, 114, 128, 0.15);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+            margin-top: 1.5rem;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            max-width: 380px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-left: 4px solid transparent;
+            background-color: var(--light-surface);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--light-border);
+        }
+        
+        .alert-success {
+            border-left-color: var(--success);
+        }
+        
+        .alert-success i {
+            color: var(--success);
+            font-size: 1.25rem;
+        }
+        
+        .alert-content {
+            flex: 1;
+        }
+        
+        .alert-content strong {
+            display: block;
+            margin-bottom: 0.25rem;
+            color: var(--light-text);
+        }
+        
+        .alert-content p {
+            font-weight: 400;
+            font-size: 0.9rem;
+            margin: 0;
+            color: var(--light-text-secondary);
+        }
+        
+        .required-field::after {
+            content: "*";
+            color: var(--error);
+            margin-left: 3px;
+        }
+        
+        /* Preview Modal */
+        .preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            z-index: 10000;
+            padding: 1rem;
+        }
+        
+        .preview-container {
+            background: var(--light-surface);
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            width: 90%;
+            max-width: 800px;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            overflow-y: auto; /* Enable vertical scrollbar when content exceeds height */
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh; /* Limit height to 90% of viewport */
+        }
+        
+        .preview-header {
+            flex-shrink: 0;
+            padding-bottom: 1rem;
+            /* Removed position: sticky or any static positioning */
+        }
+        
+        .preview-container h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--light-text);
+            word-break: break-word;
+        }
+        
+        .preview-container .subtitle {
+            font-size: 1.25rem;
+            color: var(--light-text-secondary);
+            margin-bottom: 1rem;
+            word-break: break-word;
+        }
+        
+        .preview-container .author-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .preview-container .author-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--light-border);
+        }
+        
+        .preview-container .author-name {
+            font-weight: 600;
+            color: var(--light-text);
+            word-break: break-word;
+        }
+        
+        .preview-container .author-position {
+            color: var(--light-text-secondary);
+            font-size: 0.9rem;
+            word-break: break-word;
+        }
+        
+        .preview-content {
+            flex-grow: 1;
+            /* Removed overflow-y: auto to let container handle scrolling */
+        }
+        
+        .preview-container .blog-content {
+            line-height: 1.8;
+            font-size: 1rem;
+            color: var(--light-text);
+            max-width: 100%;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            padding: 1rem 0; /* Add vertical padding for better spacing */
+        }
+        
+        .preview-container .blog-content img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .preview-container .blog-content pre,
+        .preview-container .blog-content code {
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-width: 100%;
+            padding: 1rem;
+            background: var(--light-surface-light);
+            border: 1px solid var(--light-border);
+            border-radius: var(--radius-sm);
+        }
+        
+        .preview-container .close-preview {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+            display: block;
+            margin-left: auto;
+        }
+        
+        .preview-container .close-preview:hover {
+            background-color: #4b5563;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .admin-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 1rem;
+            }
+            
+            .nav-items {
+                display: flex;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+            
+            .nav-item {
+                margin-bottom: 0;
+                margin-right: 0.5rem;
+                white-space: nowrap;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1.5rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .password-container {
+                padding: 1.5rem;
+                width: 95%;
+            }
+            
+            .preview-container {
+                padding: 1.5rem;
+                width: 95%;
+                max-height: 85vh; /* Adjusted for smaller screens */
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .button-group .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Password Modal -->
+    <div class="password-modal" id="passwordModal">
+        <div class="password-container">
+            <h2><i class="fas fa-lock"></i> Admin Access Required</h2>
+            <input type="password" class="password-input" id="passwordInput" placeholder="Enter access password" autocomplete="off">
+            <button class="password-submit" id="passwordSubmit">Enter</button>
+            <div class="password-error" id="passwordError">Incorrect password. Please try again.</div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="preview-modal" id="previewModal">
+        <div class="preview-container">
+            <div class="preview-header">
+                <h2 id="previewTitle"></h2>
+                <div class="subtitle" id="previewSubtitle"></div>
+                <div class="author-info">
+                    <img src="" alt="Author Image" class="author-image" id="previewAuthorImage" style="display: none;">
+                    <div>
+                        <div class="author-name" id="previewAuthorName"></div>
+                        <div class="author-position" id="previewAuthorPosition"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="preview-content">
+                <div class="blog-content" id="previewContent"></div>
+            </div>
+            <button class="close-preview" id="closePreview">Close Preview</button>
+        </div>
+    </div>
+
+    <div class="admin-container" id="adminContainer">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-pen-nib"></i>
+                </div>
+                <div class="logo-text">Atomo Publisher</div>
+            </div>
+            
+            <nav class="nav">
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>New Post</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Posts</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Team</span>
+                </a>
+            </nav>
+            
+            <div class="mt-auto">
+                <a href="#" class="nav-item" id="logoutLink">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h1>Create New Blog Post</h1>
+                <div class="user-profile">
+                    <div class="user-avatar">A</div>
+                    <div class="user-info">
+                        <div class="user-name">Atomo Innovation Pvt. Ltd.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Notification -->
+            <div id="successMessage" class="notification">
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    <div class="alert-content">
+                        <strong>Success!</strong>
+                        <p>Blog published successfully! It will now appear on the main website.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Publisher Card -->
+            <div class="publisher-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-edit"></i> Blog Details</h2>
+                    <div class="actions">
+                        <button class="btn" style="background: var(--light-surface-light);">
+                            <i class="fas fa-save"></i> Save Draft
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <form id="blogForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="title" class="required-field">Title</label>
+                                <input type="text" id="title" name="title" class="form-control" required placeholder="Enter blog title">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="category" class="required-field">Category</label>
+                                <select id="category" name="category" class="form-control" required>
+                                    <option value="">Select a category</option>
+                                    <option value="Innovation">Innovation</option>
+                                    <option value="Explained Simply">Explained Simply</option>
+                                    <option value="Market Trends & Insights">Market Trends & Insights</option>
+                                    <option value="Cultural Values">Cultural Values</option>
+                                    <option value="Tech Vault">Tech Vault</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="subtitle">Subtitle</label>
+                                <input type="text" id="subtitle" name="subtitle" class="form-control" placeholder="Brief description of your blog">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="author" class="required-field">Author Name</label>
+                                <input type="text" id="author" name="author" class="form-control" required placeholder="Author's full name">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="position" class="required-field">Author Position</label>
+                                <input type="text" id="position" name="position" class="form-control" required placeholder="Author's position/role">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="date">Publish Date</label>
+                                <input type="date" id="date" name="date" class="form-control">
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="featured" name="featured" class="form-control">
+                                    <label for="featured">Feature this post on homepage</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="content" class="required-field">Content</label>
+                            <div id="content" class="form-control" style="min-height: 300px;"></div>
+                            <input type="hidden" id="content-hidden" name="content" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="file-upload-label">Author Image</label>
+                            <div class="file-upload">
+                                <div class="file-upload-btn" id="fileUploadBtn">
+                                    <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; margin-bottom: 0.75rem; color: var(--secondary);"></i>
+                                    <p>Click to upload or drag and drop</p>
+                                    <p style="color: var(--light-text-secondary); font-size: 0.85rem;">PNG, JPG up to 2MB</p>
+                                </div>
+                                <input type="file" id="image" name="image" class="file-upload-input" accept="image/*">
+                            </div>
+                            <div class="file-preview" id="filePreview"></div>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button type="button" class="btn btn-secondary btn-block" id="previewButton">
+                                <i class="fas fa-eye"></i> Preview Blog Post
+                            </button>
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="fas fa-paper-plane"></i> Publish Blog Post
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Include Quill JS -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Password protection
+            const passwordModal = document.getElementById('passwordModal');
+            const adminContainer = document.getElementById('adminContainer');
+            const passwordInput = document.getElementById('passwordInput');
+            const passwordSubmit = document.getElementById('passwordSubmit');
+            const passwordError = document.getElementById('passwordError');
+            
+            // Set your password here (in a real application, this would be handled server-side)
+            const correctPassword = "admin123"; // Change this to your desired password
+            
+            // Check if already authenticated
+            if (sessionStorage.getItem('authenticated') === 'true') {
+                passwordModal.style.display = 'none';
+                adminContainer.style.display = 'flex';
+            }
+            
+            // Handle password submission
+            passwordSubmit.addEventListener('click', function() {
+                if (passwordInput.value === correctPassword) {
+                    sessionStorage.setItem('authenticated', 'true');
+                    passwordModal.style.display = 'none';
+                    adminContainer.style.display = 'flex';
+                } else {
+                    passwordError.style.display = 'block';
+                    passwordInput.value = '';
+                    setTimeout(() => {
+                        passwordError.style.display = 'none';
+                    }, 3000);
+                }
+            });
+            
+            // Allow submitting with Enter key
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    passwordSubmit.click();
+                }
+            });
+            
+            // Logout functionality
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                sessionStorage.removeItem('authenticated');
+                window.location.reload();
+            });
+            
+            // Initialize Quill editor with alignment options
+            const quill = new Quill('#content', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['blockquote', 'code-block'],
+                        [{ 'header': 1 }, { 'header': 2 }],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        [{ 'align': [] }],
+                        ['link', 'image'],
+                        ['clean']
+                    ]
+                },
+                placeholder: 'Write your blog content here...',
+            });
+
+            const blogForm = document.getElementById('blogForm');
+            const successMessage = document.getElementById('successMessage');
+            const fileUploadBtn = document.getElementById('fileUploadBtn');
+            const filePreview = document.getElementById('filePreview');
+            const fileInput = document.querySelector('.file-upload-input');
+            const contentHidden = document.getElementById('content-hidden');
+            
+            // Preview Modal Elements
+            const previewModal = document.getElementById('previewModal');
+            const previewButton = document.getElementById('previewButton');
+            const closePreview = document.getElementById('closePreview');
+            const previewTitle = document.getElementById('previewTitle');
+            const previewSubtitle = document.getElementById('previewSubtitle');
+            const previewAuthorImage = document.getElementById('previewAuthorImage');
+            const previewAuthorName = document.getElementById('previewAuthorName');
+            const previewAuthorPosition = document.getElementById('previewAuthorPosition');
+            const previewContent = document.getElementById('previewContent');
+            
+            // Auto-generate slug from title
+            document.getElementById('title').addEventListener('input', function() {
+                const slugInput = document.getElementById('slug');
+                if (!slugInput.value) {
+                    slugInput.value = this.value.toLowerCase()
+                        .replace(/\s+/g, '-')
+                        .replace(/[^\w-]+/g, '');
+                }
+            });
+            
+            // File upload preview
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    const file = e.target.files[0];
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert('File size should be less than 2MB');
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        filePreview.innerHTML = `
+                            <img src="${event.target.result}" alt="Preview">
+                            <p>${file.name} (${(file.size / 1024).toFixed(1)} KB)</p>
+                        `;
+                        filePreview.style.display = 'block';
+                        fileUploadBtn.innerHTML = 'Change Image';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Preview button functionality
+            previewButton.addEventListener('click', function() {
+                // Validate required fields
+                const title = document.getElementById('title').value;
+                const category = document.getElementById('category').value;
+                const author = document.getElementById('author').value;
+                const position = document.getElementById('position').value;
+                
+                if (!title || !category || !author || !position || !quill.getText().trim()) {
+                    alert('Please fill in all required fields before previewing.');
+                    return;
+                }
+                
+                // Populate preview modal
+                previewTitle.textContent = title;
+                previewSubtitle.textContent = document.getElementById('subtitle').value || 'No subtitle provided';
+                previewAuthorName.textContent = author;
+                previewAuthorPosition.textContent = position;
+                
+                // Clean and set content
+                let contentHTML = quill.root.innerHTML;
+                contentHTML = contentHTML.replace(/(\r\n|\n|\r)/gm, '<br>'); // Normalize line breaks
+                contentHTML = contentHTML.replace(/<p><br><\/p>/g, ''); // Remove empty paragraphs
+                previewContent.innerHTML = contentHTML;
+                
+                // Handle author image
+                if (fileInput.files.length > 0) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        previewAuthorImage.src = event.target.result;
+                        previewAuthorImage.style.display = 'block';
+                    };
+                    reader.readAsDataURL(fileInput.files[0]);
+                } else {
+                    previewAuthorImage.style.display = 'none';
+                }
+                
+                // Show preview modal and scroll to top
+                previewModal.style.display = 'flex';
+                previewModal.scrollTop = 0;
+            });
+            
+            // Close preview modal
+            closePreview.addEventListener('click', function() {
+                previewModal.style.display = 'none';
+            });
+            
+            // Close preview modal when clicking outside
+            previewModal.addEventListener('click', function(e) {
+                if (e.target === previewModal) {
+                    previewModal.style.display = 'none';
+                }
+            });
+            
+            // Form submission
+            blogForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const formData = new FormData();
+                const formElements = e.target.elements;
+                const submitBtn = blogForm.querySelector('button[type="submit"]');
+                
+                // Add all form data
+                for (let element of formElements) {
+                    if (element.name && element.type !== 'file' && element.type !== 'checkbox') {
+                        if (element.name === 'content') {
+                            formData.append('content', quill.root.innerHTML);
+                        } else {
+                            formData.append(element.name, element.value);
+                        }
+                    } else if (element.type === 'checkbox') {
+                        formData.append(element.name, element.checked);
+                    }
+                }
+                
+                // Add the file if selected
+                if (fileInput.files[0]) {
+                    formData.append('image', fileInput.files[0]);
+                }
+                
+                try {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = `
+                        <i class="fas fa-spinner fa-spin"></i>
+                        Publishing...
+                    `;
+                    
+                    const response = await fetch('/api/blogs', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (response.ok) {
+                        successMessage.classList.add('show');
+                        blogForm.reset();
+                        quill.setContents([]);
+                        filePreview.style.display = 'none';
+                        fileUploadBtn.innerHTML = `
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; margin-bottom: 0.75rem; color: var(--secondary);"></i>
+                            <p>Click to upload or drag and drop</p>
+                            <p style="color: var(--light-text-secondary); font-size: 0.85rem;">PNG, JPG up to 2MB</p>
+                        `;
+                        
+                        // Hide success message after 5 seconds
+                        setTimeout(() => {
+                            successMessage.classList.remove('show');
+                        }, 5000);
+                    } else {
+                        const error = await response.json();
+                        throw new Error(error.message || 'Error publishing blog');
+                    }
+                } catch (error) {
+                    alert(error.message || 'Failed to publish blog');
+                    console.error('Error:', error);
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = `
+                        <i class="fas fa-paper-plane"></i>
+                        Publish Blog Post
+                    `;
+                }
+            });
+            
+            // Drag and drop for file upload
+            fileUploadBtn.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileUploadBtn.style.borderColor = 'var(--primary)';
+                fileUploadBtn.style.backgroundColor = 'rgba(79, 70, 229, 0.05)';
+            });
+            
+            fileUploadBtn.addEventListener('dragleave', () => {
+                fileUploadBtn.style.borderColor = 'var(--light-border)';
+                fileUploadBtn.style.backgroundColor = 'var(--light-surface-light)';
+            });
+            
+            fileUploadBtn.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileUploadBtn.style.borderColor = 'var(--light-border)';
+                fileUploadBtn.style.backgroundColor = 'var(--light-surface-light)';
+                
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    const event = new Event('change');
+                    fileInput.dispatchEvent(event);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
